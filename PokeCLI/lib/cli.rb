@@ -1,39 +1,68 @@
-class CLI
-  require 'pry'
+# include Styling
+require_relative './styling'
+
+class CLI 
+  include Styling
+  # require 'pry'
   attr_reader :user
   attr_accessor :current_selected_pokemon
 
+  def loading_screen
+    puts_super_fast <<-EOF
+    .::.                          
+    .;:**'            AMC           
+    `                  0            
+.:XHHHHk.              db.   .;;.     dH  MX   0            
+oMMMMMMMMMMM       ~MM  dMMP :MMMMMR   MMM  MR      ~MRMN     
+QMMMMMb  "MMX       MMMMMMP !MX' :M~   MMM MMM  .oo. XMMM 'MMM
+`MMMM.  )M> :X!Hk. MMMM   XMM.o"  .  MMMMMMM X?XMMM MMM>!MMP
+'MMMb.dM! XM M'?M MMMMMX.`MMMMMMMM~ MM MMM XM `" MX MMXXMM 
+~MMMMM~ XMM. .XM XM`"MMMb.~*?**~ .MMX M t MMbooMM XMMMMMP 
+?MMM>  YMMMMMM! MM   `?MMRb.    `"""   !L"MMMMM XM IMMM  
+MMMX   "MMMM"  MM       ~%:           !Mh.""" dMI IMMP  
+'MMM.                                             IMX   
+~M!M                                             IMP   
+                                    
+        A SPECTACULAR GAME BY RANJIT & AZAM
+        ___________________________________
+    EOF
+  end
 
   def welcome
-    puts "Welcome to PokeCLI"
+    puts ""
   end
 
   def who_are_you?
-    puts "What's your name?"
+    puts_super_fast PASTEL.yellow("***************************************************************")
+    puts ""
+    puts_fast "           Welcome to PokeCLI - Enter your name below!"
+    puts ""
+    puts_super_fast PASTEL.yellow("***************************************************************")
     name = gets.chomp
     @user = User.find_or_create_by(name: name)
     @user.pokemons.count == 0 ? self.default_pokemon : self.menu
+    puts ""
   end
 
   def default_pokemon
-    puts "Hello! My name is Oak. People call me the Pokemon Professor. So your name is #{@user.name}?"
-    puts "I see you don't have any Pokemon with you. Well, I've had a few new ones come in just today - would you like to see?"
-    puts "Please select your Pokemon"
-    puts "1. Bulbasaur"
-    puts "2. Squirtle"
-    puts "3. Charmander"
-    puts "4. Pikachu"
+    puts ""
+    puts_fast "Hello! My name is Oak. People call me the Pokemon Professor. So your name is #{@user.name}?"
+    puts ""
+    options = ["Bulbasaur", "Squirtle", "Charmander", "Pikachu"]
+    choice = PROMPT.select("I see you don't have any Pokemon with you. Well, I've had a few new ones come in just today - would you like to see?", options)
     choice = gets.chomp.to_i
+    puts ""
     case choice
-    when 1
+    when options[0]
       UserPokemon.create({user: @user, pokemon: Pokemon.find_by(name: "Bulbasaur")})
-    when 2
+    when options[1]
       UserPokemon.create({user: @user, pokemon: Pokemon.find_by(name: "Squirtle")})
-    when 3
+    when options[2]
       UserPokemon.create({user: @user, pokemon: Pokemon.find_by(name: "Charmander")})
-    when 4
+    when options[3]
       UserPokemon.create({user: @user, pokemon: Pokemon.find_by(name: "Pikachu")})
     end
+    puts ""
     self.menu
   end
 
