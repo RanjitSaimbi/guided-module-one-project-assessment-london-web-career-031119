@@ -1,7 +1,7 @@
 module Styling
 
   PROMPT = TTY::Prompt.new
-  FONT = TTY::Font.new(:doom)
+  FONT = TTY::Font.new(:starwars)
   PASTEL = Pastel.new
 
   def puts_slow(str)

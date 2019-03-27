@@ -8,38 +8,39 @@ class CLI
   attr_accessor :current_selected_pokemon
 
   def loading_screen
-    puts_super_fast <<-EOF
-    .::.
-    .;:**'            AMC
-    `                  0
-.:XHHHHk.              db.   .;;.     dH  MX   0
-oMMMMMMMMMMM       ~MM  dMMP :MMMMMR   MMM  MR      ~MRMN
-QMMMMMb  "MMX       MMMMMMP !MX' :M~   MMM MMM  .oo. XMMM 'MMM
-`MMMM.  )M> :X!Hk. MMMM   XMM.o"  .  MMMMMMM X?XMMM MMM>!MMP
-'MMMb.dM! XM M'?M MMMMMX.`MMMMMMMM~ MM MMM XM `" MX MMXXMM
-~MMMMM~ XMM. .XM XM`"MMMb.~*?**~ .MMX M t MMbooMM XMMMMMP
-?MMM>  YMMMMMM! MM   `?MMRb.    `"""   !L"MMMMM XM IMMM
-MMMX   "MMMM"  MM       ~%:           !Mh.""" dMI IMMP
-'MMM.                                             IMX
-~M!M                                             IMP
+puts_super_fast PASTEL.yellow("********************************************************************************************************")
+puts_super_fast PASTEL.yellow("********************************************************************************************************")
+puts_super_fast PASTEL.yellow("********************************************************************************************************")
+puts_super_fast PASTEL.yellow("********************************************************************************************************")
+puts ""
+puts ""
 
-        A SPECTACULAR GAME BY RANJIT & AZAM
-        ___________________________________
-    EOF
+
+    puts_super_fast <<-EOF
+             ██████╗  ██████╗ ██╗  ██╗███████╗███╗   ███╗ ██████╗ ███╗   ██╗
+             ██╔══██╗██╔═══██╗██║ ██╔╝██╔════╝████╗ ████║██╔═══██╗████╗  ██║
+             ██████╔╝██║   ██║█████╔╝ █████╗  ██╔████╔██║██║   ██║██╔██╗ ██║
+             ██╔═══╝ ██║   ██║██╔═██╗ ██╔══╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
+             ██║     ╚██████╔╝██║  ██╗███████╗██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
+             ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+                          A RANJIT & AZAM PRODUCTION
+          EOF
   end
 
   def welcome
     puts ""
   end
 
+
   def who_are_you?
-    puts_super_fast PASTEL.yellow("***************************************************************")
+    puts_super_fast PASTEL.yellow("********************************************************************************************************")
+    puts_super_fast PASTEL.yellow("********************************************************************************************************")
+    puts_super_fast PASTEL.yellow("********************************************************************************************************")
+    puts_super_fast PASTEL.yellow("********************************************************************************************************")
     puts ""
-    puts_fast "           Welcome to PokeCLI - Enter your name below!"
+    name = PROMPT.ask('What is your name?')
     puts ""
-    puts_super_fast PASTEL.yellow("***************************************************************")
-    puts ""
-    name = gets.chomp
     @user = User.find_or_create_by(name: name)
     @user.pokemons.count == 0 ? self.default_pokemon : self.menu
     puts ""
@@ -67,7 +68,7 @@ MMMX   "MMMM"  MM       ~%:           !Mh.""" dMI IMMP
 
   def menu
     puts ""
-    options = ["Do Battle", "View Pokedex", "Leaderboard", "Switch User", "About","Exit"]
+    options = ["Do Battle", "View Pokedex", "Leaderboard", "About", "Exit"]
     choice = PROMPT.select("Welcome to the Main Menu. Please select an option.", options)
     puts ""
     case choice
@@ -78,27 +79,34 @@ MMMX   "MMMM"  MM       ~%:           !Mh.""" dMI IMMP
     when options[2]
       self.leaderboard
     when options[3]
-      self.switch_user
-    when options[4]
       self.about
-    when options[5]
+    when options[4]
       self.exit
     end
   end
 
 
     def select_pokemon
-      puts_fast "Woah - I think I saw Team Rocket up ahead! Quick - select your pokemon for battle!"
+      puts_fast "Woah - I think I saw Team Rocket up ahead!"
       puts ""
       options = @user.pokemons.all.map {|pokemon| pokemon.name}
-      choice = PROMPT.select("Type the name of the pokemon you want to select.", options)
+      choice = PROMPT.select("Quick - select your pokemon for battle!", options)
       @current_selected_pokemon = Pokemon.find_by(name: choice)
+      puts ""
       puts_fast "Great! You chose #{@current_selected_pokemon.name}! Let's get ready!"
       puts ""
     end
 
     def random_pokemon
-      random = Pokemon.order("RANDOM()").first
+      u = @current_selected_pokemon
+      a1 = [u.speed, u.special_defense, u.special_attack, u.defense, u.attack].sort
+      r = Pokemon.order(Arel.sql('random()')).first
+      a2 = [r.speed, r.special_defense, r.special_attack, r.defense, r.attack]
+      while a2.none? {|i|i < a1[2]}
+        r = Pokemon.order(Arel.sql('random()')).first
+        a2 = [r.speed, r.special_defense, r.special_attack, r.defense, r.attack]
+      end
+      r
     end
 
     def battle
@@ -154,7 +162,7 @@ MMMX   "MMMM"  MM       ~%:           !Mh.""" dMI IMMP
       rows = pokemon_left_array.map{|p|["#{i += 1}.", p.name, "?"]}
       table = Terminal::Table.new :title => "POKEMON LEFT TO CATCH", :headings => ['NO.','NAME.', 'STATS'], :rows => rows, :style => {:all_separators => true}
       table.style = {:width => 70, :padding_left => 2, :border_x => "=", :border_i => "+"}
-      puts PASTEL.bright_yellow(table)
+      puts PASTEL.bright_green(table)
       options = ["Back to Menu"]
       choice = PROMPT.select("What would you like to do?", options)
       self.menu if choice == "Back to Menu"
@@ -170,11 +178,32 @@ MMMX   "MMMM"  MM       ~%:           !Mh.""" dMI IMMP
       self.menu if choice == "Back to Menu"
     end
 
-    def switch_user
-      
+    def about
+      puts_fast ""
       options = ["Back to Menu"]
       choice = PROMPT.select("What would you like to do?", options)
       self.menu if choice == "Back to Menu"
+    end
+
+    def exit
+        puts ""
+        puts_fast PASTEL.yellow("********************************************************************************************************")
+        puts ""
+
+        puts_super_fast <<-EOF
+
+         ██████╗  ██████╗  ██████╗ ██████╗ ██████╗ ██╗   ██╗███████╗██╗
+        ██╔════╝ ██╔═══██╗██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝██╔════╝██║
+        ██║  ███╗██║   ██║██║   ██║██║  ██║██████╔╝ ╚████╔╝ █████╗  ██║
+        ██║   ██║██║   ██║██║   ██║██║  ██║██╔══██╗  ╚██╔╝  ██╔══╝  ╚═╝
+        ╚██████╔╝╚██████╔╝╚██████╔╝██████╔╝██████╔╝   ██║   ███████╗██╗
+         ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   ╚══════╝╚═╝
+        EOF
+
+        puts ""
+        puts_fast PASTEL.yellow("********************************************************************************************************")
+        exec 'killall afplay'
+        exit
     end
 
 end
