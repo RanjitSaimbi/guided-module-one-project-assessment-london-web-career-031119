@@ -17,12 +17,13 @@ puts ""
 
 
     puts_super_fast <<-EOF
-             ██████╗  ██████╗ ██╗  ██╗███████╗███╗   ███╗ ██████╗ ███╗   ██╗
-             ██╔══██╗██╔═══██╗██║ ██╔╝██╔════╝████╗ ████║██╔═══██╗████╗  ██║
-             ██████╔╝██║   ██║█████╔╝ █████╗  ██╔████╔██║██║   ██║██╔██╗ ██║
-             ██╔═══╝ ██║   ██║██╔═██╗ ██╔══╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
-             ██║     ╚██████╔╝██║  ██╗███████╗██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
-             ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+              ██████╗  ██████╗ ██╗  ██╗███████╗     ██████╗██╗     ██╗
+              ██╔══██╗██╔═══██╗██║ ██╔╝██╔════╝    ██╔════╝██║     ██║
+              ██████╔╝██║   ██║█████╔╝ █████╗█████╗██║     ██║     ██║
+              ██╔═══╝ ██║   ██║██╔═██╗ ██╔══╝╚════╝██║     ██║     ██║
+              ██║     ╚██████╔╝██║  ██╗███████╗    ╚██████╗███████╗██║
+              ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚══════╝     ╚═════╝╚══════╝╚═╝
+
 
                           A RANJIT & AZAM PRODUCTION
           EOF
@@ -52,7 +53,6 @@ puts ""
     puts ""
     options = ["Bulbasaur", "Squirtle", "Charmander", "Pikachu"]
     choice = PROMPT.select("I see you don't have any Pokemon with you. Well, I've had a few new ones come in just today - would you like to see?", options)
-    puts ""
     case choice
     when options[0]
       UserPokemon.create({user: @user, pokemon: Pokemon.find_by(name: "Bulbasaur")})
@@ -68,7 +68,7 @@ puts ""
 
   def menu
     puts ""
-    options = ["Do Battle", "View Pokedex", "Leaderboard", "About", "Exit"]
+    options = ["Do Battle", "View Pokedex", "Leaderboard", "Instructions", "Exit"]
     choice = PROMPT.select("Welcome to the Main Menu. Please select an option.", options)
     puts ""
     case choice
@@ -79,7 +79,7 @@ puts ""
     when options[2]
       self.leaderboard
     when options[3]
-      self.about
+      self.instructions
     when options[4]
       self.exit
     end
@@ -113,6 +113,7 @@ puts ""
       select_pokemon
       team_rocket_pokemon = random_pokemon
       new_battle = Battle.new(@user, @current_selected_pokemon, team_rocket_pokemon)
+      new_battle.dramatic_intro
       new_battle.round_1
       self.menu
     end
@@ -121,7 +122,7 @@ puts ""
       rows = @user.pokemons.map{|p|[p.name, p.speed, p.special_defense, p.special_attack, p.defense, p.attack]}
       table = Terminal::Table.new :title => "POKEDEX", :headings => ['NAME','SPEED', 'SPECIAL DEFENSE', 'SPECIAL ATTACK', 'DEFENCE', 'ATTACK'], :rows => rows, :style => {:all_separators => true}
       table.style = {:width => 110, :padding_left => 2, :border_x => "=", :border_i => "+"}
-      puts PASTEL.bright_yellow(table)
+      puts PASTEL.bright_green(table)
       puts ""
       options = ["Back to Menu", "Set a Pokemon Free", "Pokemon Left to Catch"]
       choice = PROMPT.select("What would you like to do?", options)
@@ -172,14 +173,20 @@ puts ""
       rows = UserPokemon.group(:user).count.map {|item| [item[0].name, item[1]]}
       table = Terminal::Table.new :title => "LEADERBOARD", :headings => ['USER', 'POKEMON COUNT'], :rows => rows, :style => {:all_separators => true}
       table.style = {:width => 70, :padding_left => 2, :border_x => "=", :border_i => "+"}
-      puts PASTEL.bright_yellow(table)
+      puts PASTEL.bright_green(table)
       options = ["Back to Menu"]
       choice = PROMPT.select("What would you like to do?", options)
       self.menu if choice == "Back to Menu"
     end
 
-    def about
-      puts_fast ""
+    def instructions
+      puts_super_fast "PokeCLI is a turn-based top-trumps game. Each pokemon has five attributes: SPEED, SPECIAL DEFENSE, SPECIAL ATTACK, DEFENCE and ATTACK."
+      puts_super_fast "Battle Team Rocket to try and collect as many pokemon as possible. Select your best pokemon to face Team Rocket!"
+      puts_super_fast "Each battle is made up of a maximum of three rounds. Select your pokemon's best attribute to compare it with your opponent's."
+      puts_super_fast "If you win at least two rounds, you win the battle and your opponent's pokemon which gets added to your pokedex."
+      puts_super_fast "If you lose, you lose your pokemon, so be careful!"
+      puts_super_fast "Good luck out there #{@user.name}!"
+
       options = ["Back to Menu"]
       choice = PROMPT.select("What would you like to do?", options)
       self.menu if choice == "Back to Menu"
@@ -187,7 +194,10 @@ puts ""
 
     def exit
         puts ""
-        puts_fast PASTEL.yellow("********************************************************************************************************")
+        puts_super_fast PASTEL.yellow("********************************************************************************************************")
+        puts_super_fast PASTEL.yellow("********************************************************************************************************")
+        puts_super_fast PASTEL.yellow("********************************************************************************************************")
+        puts_super_fast PASTEL.yellow("********************************************************************************************************")
         puts ""
 
         puts_super_fast <<-EOF
@@ -201,7 +211,10 @@ puts ""
         EOF
 
         puts ""
-        puts_fast PASTEL.yellow("********************************************************************************************************")
+        puts_super_fast PASTEL.yellow("********************************************************************************************************")
+        puts_super_fast PASTEL.yellow("********************************************************************************************************")
+        puts_super_fast PASTEL.yellow("********************************************************************************************************")
+        puts_super_fast PASTEL.yellow("********************************************************************************************************")
         exec 'killall afplay'
         exit
     end
