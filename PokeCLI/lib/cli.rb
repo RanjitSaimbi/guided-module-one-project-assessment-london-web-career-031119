@@ -9,22 +9,18 @@ class CLI
 
   def loading_screen
     puts_super_fast <<-EOF
-    .::.                          
-    .;:**'            AMC           
-    `                  0            
-.:XHHHHk.              db.   .;;.     dH  MX   0            
-oMMMMMMMMMMM       ~MM  dMMP :MMMMMR   MMM  MR      ~MRMN     
-QMMMMMb  "MMX       MMMMMMP !MX' :M~   MMM MMM  .oo. XMMM 'MMM
-`MMMM.  )M> :X!Hk. MMMM   XMM.o"  .  MMMMMMM X?XMMM MMM>!MMP
-'MMMb.dM! XM M'?M MMMMMX.`MMMMMMMM~ MM MMM XM `" MX MMXXMM 
-~MMMMM~ XMM. .XM XM`"MMMb.~*?**~ .MMX M t MMbooMM XMMMMMP 
-?MMM>  YMMMMMM! MM   `?MMRb.    `"""   !L"MMMMM XM IMMM  
-MMMX   "MMMM"  MM       ~%:           !Mh.""" dMI IMMP  
-'MMM.                                             IMX   
-~M!M                                             IMP   
+
+    ██████╗  ██████╗ ██╗  ██╗███████╗███╗   ███╗ ██████╗ ███╗   ██╗
+    ██╔══██╗██╔═══██╗██║ ██╔╝██╔════╝████╗ ████║██╔═══██╗████╗  ██║
+    ██████╔╝██║   ██║█████╔╝ █████╗  ██╔████╔██║██║   ██║██╔██╗ ██║
+    ██╔═══╝ ██║   ██║██╔═██╗ ██╔══╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
+    ██║     ╚██████╔╝██║  ██╗███████╗██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
+    ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+                                                                   
+    
                                     
-        A SPECTACULAR GAME BY RANJIT & AZAM
-        ___________________________________
+              A SPECTACULAR GAME BY RANJIT & AZAM
+              ___________________________________
     EOF
   end
 
@@ -86,6 +82,7 @@ MMMX   "MMMM"  MM       ~%:           !Mh.""" dMI IMMP
       puts "Type the name of the pokemon you want to select."
       choice = gets.chomp
       @current_selected_pokemon = Pokemon.find_by(name: choice)
+      #clear terminal?
       puts "Great! You chose #{@current_selected_pokemon.name}! Let's get ready!"
     end
 
@@ -97,6 +94,8 @@ MMMX   "MMMM"  MM       ~%:           !Mh.""" dMI IMMP
       select_pokemon
       team_rocket_pokemon = random_pokemon
       new_battle = Battle.new(@user, @current_selected_pokemon, team_rocket_pokemon)
+      new_battle.animation
+      new_battle.dramatic_into
       new_battle.round_1
       self.menu
     end

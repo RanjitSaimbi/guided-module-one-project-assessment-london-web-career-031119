@@ -17,7 +17,7 @@ module Styling
     chars = str.split(//)
     chars.each do |c|
       print c
-      sleep 0.1
+      sleep 0.03
     end
     print "\n"
   end
@@ -35,7 +35,7 @@ module Styling
     chars = str.split(//)
     chars.each do |c|
       print c
-      sleep 0.001
+      sleep 0.0001
     end
     print "\n"
   end
