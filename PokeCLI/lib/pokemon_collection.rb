@@ -126,15 +126,15 @@ POKEMON = '[
           "name": "special-attack"
         },
         {
-          "value": 52,
+          "value": 90,
           "name": "attack"
         },
         {
-          "value": 50,
+          "value": 80,
           "name": "special-defense"
         },
         {
-          "value": 43,
+          "value": 75,
           "name": "defense"
         },
         {
@@ -279,15 +279,15 @@ POKEMON = '[
           "name": "defense"
         },
         {
-          "value": 64,
+          "value": 80,
           "name": "special-defense"
         },
         {
-          "value": 50,
+          "value": 75,
           "name": "special-attack"
         },
         {
-          "value": 48,
+          "value": 90,
           "name": "attack"
         },
         {
@@ -1143,11 +1143,11 @@ POKEMON = '[
           "name": "special-defense"
         },
         {
-          "value": 50,
+          "value": 90,
           "name": "special-attack"
         },
         {
-          "value": 40,
+          "value": 75,
           "name": "defense"
         },
         {
@@ -7545,11 +7545,11 @@ POKEMON = '[
           "name": "special-attack"
         },
         {
-          "value": 45,
+          "value": 75,
           "name": "speed"
         },
         {
-          "value": 49,
+          "value": 80,
           "name": "attack"
         },
         {
@@ -7561,7 +7561,7 @@ POKEMON = '[
           "name": "special-defense"
         },
         {
-          "value": 49,
+          "value": 90,
           "name": "defense"
         }
       ],

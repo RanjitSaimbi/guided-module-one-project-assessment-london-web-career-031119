@@ -102,7 +102,7 @@ puts ""
       a1 = [u.speed, u.special_defense, u.special_attack, u.defense, u.attack].sort
       r = Pokemon.order(Arel.sql('random()')).first
       a2 = [r.speed, r.special_defense, r.special_attack, r.defense, r.attack]
-      while a2.none? {|i|i < a1[2]}
+      while a2.none? {|i|i < a1[1]}
         r = Pokemon.order(Arel.sql('random()')).first
         a2 = [r.speed, r.special_defense, r.special_attack, r.defense, r.attack]
       end
@@ -140,6 +140,7 @@ puts ""
       options = @user.pokemons.all.map {|pokemon| pokemon.name}
       choice = PROMPT.select("Please select a pokemon that you would like to set free.", options)
       pokemon_to_set_free = Pokemon.find_by(name: choice)
+
 
       if @user.pokemons.count > 1
         UserPokemon.all.find_by({user: @user, pokemon: pokemon_to_set_free}).destroy
@@ -209,6 +210,7 @@ puts ""
         ╚██████╔╝╚██████╔╝╚██████╔╝██████╔╝██████╔╝   ██║   ███████╗██╗
          ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   ╚══════╝╚═╝
         EOF
+
 
         puts ""
         puts_super_fast PASTEL.yellow("********************************************************************************************************")
