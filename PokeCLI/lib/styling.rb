@@ -8,7 +8,7 @@ module Styling
     chars = str.split(//)
     chars.each do |c|
       print c
-      sleep 0.15
+      sleep 0.1
     end
     print "\n"
   end
@@ -40,16 +40,14 @@ module Styling
     print "\n"
   end
 
-  def music
-      options=["Yes", "No"]
-      puts ""
-      choice=PROMPT.select("Would you like to enable sound?",options)
-      case choice
-        when options[0]
-          @pid = fork{ exec 'afplay', "lib/opening.mp3" }
-        when options[1]
-      end
-    end
+  def opening_sound
+    @pid = fork{ exec 'afplay', "lib/sounds/opening.mp3" }
+  end
+
+  def attack_sound
+    @pid = fork{ exec 'afplay', "lib/sounds/attack.wav" }
+  end
+
 
 
 end

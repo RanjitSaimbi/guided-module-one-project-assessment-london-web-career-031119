@@ -8,6 +8,7 @@ class CLI
   attr_accessor :current_selected_pokemon
 
   def loading_screen
+    opening_sound
 puts_super_fast PASTEL.yellow("********************************************************************************************************")
 puts_super_fast PASTEL.yellow("********************************************************************************************************")
 puts_super_fast PASTEL.yellow("********************************************************************************************************")
@@ -114,7 +115,7 @@ puts ""
       select_pokemon
       team_rocket_pokemon = random_pokemon
       new_battle = Battle.new(@user, @current_selected_pokemon, team_rocket_pokemon)
-      new_battle.dramatic_intro
+      # new_battle.dramatic_intro
       new_battle.round_1
       self.menu
     end
