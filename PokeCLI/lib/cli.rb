@@ -64,12 +64,13 @@ puts ""
     when options[3]
       UserPokemon.create({user: @user, pokemon: Pokemon.find_by(name: "Pikachu")})
     end
+    system("clear")
     self.menu
   end
 
   def menu
     puts ""
-    options = ["Battle!", "View Pokedex", "Leaderboard", "Instructions", "Exit"]
+    options = ["Battle!", "View Pokedex", "Leaderboard", "Instructions", "Switch User", "Exit"]
     choice = PROMPT.select("Welcome to the Main Menu. Please select an option.", options)
     puts ""
     case choice
@@ -82,6 +83,8 @@ puts ""
     when options[3]
       self.instructions
     when options[4]
+      self.switch_user
+    when options[5]
       self.exit
     end
   end
@@ -213,6 +216,38 @@ puts ""
       options = ["Back to Menu"]
       choice = PROMPT.select("What would you like to do?", options)
       self.menu if choice == "Back to Menu"
+    end
+
+    def switch_user
+      name = PROMPT.ask('Please type the user name you would like to switch to.')
+      if User.all.map{|i|i.name}.include? name
+        @user = User.all.find_by(name: name)
+        puts ""
+        puts_fast PASTEL.green.bold ("Succesfully changed user to #{@user.name}. Returning to Main Menu...")
+        puts ""
+        puts_fast PASTEL.green.bold("Loading - ██████████████")
+        puts ""
+        system("clear")
+        self.menu
+      else
+        puts ""
+        choice = PROMPT.yes?("Your name was not found on the database. Do you want to create a new user?")
+        if choice
+          @user = User.find_or_create_by(name: name)
+          self.default_pokemon
+        else
+          puts ""
+          puts_fast PASTEL.green.bold ("Returning to Main Menu...")
+          puts ""
+          puts_fast PASTEL.green.bold("Loading - ██████████████")
+          puts ""
+          system("clear")
+          self.menu
+        end
+
+      end
+      binding.pry
+      puts "Done"
     end
 
     def exit
