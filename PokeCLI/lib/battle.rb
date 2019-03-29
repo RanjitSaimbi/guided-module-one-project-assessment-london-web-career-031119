@@ -33,6 +33,10 @@ class Battle
     system("clear")
   end
 
+  def round_counter
+    puts_slow PASTEL.green.bold("#{@user.name} - #{@user_score} / Team Rocket - #{tr_score}")
+  end
+
   def refresher
     puts ""
     puts_medium PASTEL.green.bold ("Round Finished - Moving to next round.....")
@@ -80,6 +84,7 @@ class Battle
         @user_score += 1
         puts_medium PASTEL.white.bold("You only need to win one more round to win the battle!")
           puts ""
+          round_counter
           self.refresher
       elsif @user_pokemon.send(:"#{choice}") < @team_rocket_pokemon.send(:"#{choice}")
 
@@ -92,6 +97,7 @@ class Battle
         attack_sound
       puts_medium PASTEL.white.bold("Team Rocket won the round - if they win the next one, they'll win the battle!")
         puts ""
+        round_counter
         self.refresher
       else
         randomizer = [0,1].sample
@@ -103,6 +109,7 @@ class Battle
               puts ""
               attack_sound
               @user_score += 1
+              round_counter
               self.refresher
             else
             puts_medium PASTEL.white("Looks like Team Rocket's #{@team_rocket_pokemon.name} and your #{@user_pokemon.name} both inflicted ") + PASTEL.bright_white.on_bright_red.bold("#{@team_rocket_pokemon.send(:"#{choice}")} DAMAGE!")
@@ -112,7 +119,9 @@ class Battle
               puts ""
               attack_sound
               @tr_score += 1
+              round_counter
               self.refresher
+              
       end
     end
     #Deleting the selected attribute from user and moves directly to round 2
@@ -143,6 +152,7 @@ class Battle
       puts ""
       attack_sound
       @user_score += 1
+      round_counter
       self.refresher
     elsif @user_pokemon.send(:"#{tr_choice}") < @team_rocket_pokemon.send(:"#{tr_choice}")
       puts_medium PASTEL.white("Team Rocket's #{@team_rocket_pokemon.name} used #{print} and inflicted ") + PASTEL.bright_white.on_bright_red.bold("#{@team_rocket_pokemon.send(:"#{tr_choice}")} DAMAGE!")
@@ -154,6 +164,7 @@ class Battle
       puts_medium PASTEL.white("Team Rocket's #{@team_rocket_pokemon.name} wins!")
       puts ""
       @tr_score += 1
+      round_counter
       self.refresher
     else
       randomizer = [0,1].sample
@@ -165,6 +176,7 @@ class Battle
         puts ""
         attack_sound
         @user_score += 1
+        round_counter
         self.refresher
       else
         puts_medium PASTEL.white("Looks like Team Rocket's #{@team_rocket_pokemon.name} and your #{@user_pokemon.name} both do ") + PASTEL.bright_white.on_bright_red.bold("#{@team_rocket_pokemon.send(:"#{tr_choice}")} DAMAGE!")
@@ -174,6 +186,7 @@ class Battle
         puts ""
         attack_sound
         @tr_score += 1
+        round_counter
         self.refresher
       end
     end
@@ -197,23 +210,25 @@ class Battle
     puts ""
 
     if @user_pokemon.send(:"#{choice}") > @team_rocket_pokemon.send(:"#{choice}")
-      puts_medium PASTEL.white("You used #{print} with ") + PASTEL.bright_white.on_bright_red.bold("#{@user_pokemon.send(:"#{choice}")} DAMAGE!")
-      puts ""
-      attack_sound
-      puts_medium PASTEL.white("Great, it's super effective! ") + PASTEL.white("Team Rocket could only manage ") + PASTEL.bright_white.on_bright_red.bold("#{@team_rocket_pokemon.send(:"#{choice}")} DAMAGE!")
-      puts ""
-      attack_sound
-      @user_score += 1
-      system("clear")
-    elsif @user_pokemon.send(:"#{choice}") < @team_rocket_pokemon.send(:"#{choice}")
-      puts_medium PASTEL.white("You used #{print} with ") + PASTEL.bright_white.on_bright_red.bold("#{@user_pokemon.send(:"#{choice}")} DAMAGE!")
-      puts ""
-      attack_sound
-      puts_medium PASTEL.white("Damn - their #{@team_rocket_pokemon.name} was too strong for you, and inflicted ") + PASTEL.bright_white.on_bright_red.bold("#{@team_rocket_pokemon.send(:"#{choice}")} DAMAGE!")
-      @tr_score += 1
-      puts ""
-      attack_sound
-      self.refresher
+        puts_medium PASTEL.white("You used #{print} with ") + PASTEL.bright_white.on_bright_red.bold("#{@user_pokemon.send(:"#{choice}")} DAMAGE!")
+          puts ""
+        attack_sound
+        puts_medium PASTEL.white("Great, it's super effective! ") + PASTEL.white("Team Rocket could only manage ") + PASTEL.bright_white.on_bright_red.bold("#{@team_rocket_pokemon.send(:"#{choice}")} DAMAGE!")
+          puts ""
+        attack_sound
+        @user_score += 1
+        round_counter
+        system("clear")
+      elsif @user_pokemon.send(:"#{choice}") < @team_rocket_pokemon.send(:"#{choice}")
+        puts_medium PASTEL.white("You used #{print} with ") + PASTEL.bright_white.on_bright_red.bold("#{@user_pokemon.send(:"#{choice}")} DAMAGE!")
+          puts ""
+        attack_sound
+        puts_medium PASTEL.white("Damn - their #{@team_rocket_pokemon.name} was too strong for you, and inflicted ") + PASTEL.bright_white.on_bright_red.bold("#{@team_rocket_pokemon.send(:"#{choice}")} DAMAGE!")
+        @tr_score += 1
+          puts ""
+        attack_sound
+        round_counter
+        self.refresher
       else
         randomizer = [0,1].sample
         if randomizer == 0
@@ -224,6 +239,7 @@ class Battle
           puts ""
           attack_sound
           @user_score += 1
+          round_counter
           self.refresher
         else
           puts_medium PASTEL.white("Looks like Team Rocket's #{@team_rocket_pokemon.name} and your #{@user_pokemon.name} both inflicted ") + PASTEL.bright_white.on_bright_red.bold("#{@team_rocket_pokemon.send(:"#{choice}")} DAMAGE!")
@@ -233,6 +249,7 @@ class Battle
           puts ""
           attack_sound
           @tr_score += 1
+          round_counter
           self.refresher
         end
     end
@@ -244,6 +261,7 @@ class Battle
       puts_medium PASTEL.white.bold("Congrats! You beat Team Rocket and caught their #{@team_rocket_pokemon.name}!")
       UserPokemon.create({user: @user, pokemon: @team_rocket_pokemon})
       attack_sound
+      round_counter
       self.main_menu_refresher
     elsif @tr_score == 2
       puts_medium PASTEL.white.bold("Team Rocket were too strong for you! Better luck next time!")
@@ -252,9 +270,11 @@ class Battle
         UserPokemon.find_by({user: @user, pokemon: @user_pokemon}).destroy
         puts_medium PASTEL.white("Team Rocket took your #{@takeaway.sample} and your ") + PASTEL.bright_white.bold("#{@user_pokemon.name}!")
         attack_sound
+        round_counter
         self.main_menu_refresher
       else
         puts_medium PASTEL.white.bold("You've only got one pokemon left - Team Rocket decided to let you keep it.")
+        round_counter
         self.main_menu_refresher
       end
 
